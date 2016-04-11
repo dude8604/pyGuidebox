@@ -167,7 +167,7 @@ class showDetailed(show):
 		for ch in self.channels:
 			text += str(ch)+'\n'
 		text += '\nRuntime: ' + str(self.runtime) + \
-				'Cast/Characters: \n'
+				'\nCast/Characters: \n'
 		for c in self.cast:
 			text += str(c)+'\n'
 		text += '\nGenres: \n'
@@ -208,17 +208,17 @@ class channel:
 	def __str__(self, *args, **kwargs):
 		text = \
 			'Channel Name: '+str(self.name)+\
-			'ID: '+str(self.id)+\
-			'Short Name: '+str(self.shortName)+\
-			'Channel Type: '+str(self.channelType)+\
-			'Artworks: \n'
+			'\nID: '+str(self.id)+\
+			'\nShort Name: '+str(self.shortName)+\
+			'\nChannel Type: '+str(self.channelType)+\
+			'\nArtworks: \n'
 		for a in self.artworks:
 			text += str(a)+'\n'
 		text += '\nIMDb ID: '+str(self.imdbId)+\
 				'\nWikipedia ID: '+str(self.wikipediaId)+\
 				'\nSocial: '+str(self.socialNetworks)+\
 				'\nLive Streaming Links: '+str(self.liveStreams)+\
-				'\nIs Primary: '+str(self.primary)+'\n\n'
+				'\nIs Primary: '+str(self.primary)+'\n'
 		return text
 
 
@@ -248,7 +248,7 @@ class streamingSource:
 				'\nApp Link: '+str(self.appLink)+\
 				'\nIs App Required for this Device? '+str(self.appRequired)+\
 				'\nApp Download Link: '+str(self.appDownloadLink)
-		return text + '\n\n'
+		return text + '\n'
 
 
 class streams:
@@ -270,7 +270,7 @@ class streams:
 		text += 'iOS: \n'
 		for s in self.ios:
 			text+=str(s)+'\n'
-		text = 'Android: \n'
+		text += 'Android: \n'
 		for s in self.android:
 			text+=str(s)+'\n'
 		return text
@@ -510,4 +510,4 @@ r = lookupShows(title='the office')
 r.lookup()
 print(r.lookupDetailed(index=0))
 
-print(r)
+#print(r)
