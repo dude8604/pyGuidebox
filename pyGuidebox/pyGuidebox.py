@@ -39,6 +39,7 @@ class artwork:
 			'URL: ' + str(self.url) + \
 			'\nResolution: ' + str(self.resolution) + '\n'
 
+
 def parseArtworks(result):
 	artworks = []
 	artworkKeys = []
@@ -48,6 +49,97 @@ def parseArtworks(result):
 	for key in artworkKeys:
 		artworks.append(artwork(key.split('_')[1], result[key]))
 	return artworks
+
+
+class image:
+
+	def __init__(self, size, width, height, originalWidth, originalHeight, url, rating):
+		self.size = size
+		self.width = width
+		self.height = height
+		self.originaHeight=originalHeight
+		self.originaWidth=originalWidth
+		self.url = url
+		self.rating=rating
+
+	def __str__(self):
+		return \
+			'Size: ' + str(self.size) + \
+			'\nWidth: ' + str(self.width) +\
+			'\nHeight: ' + str(self.height) +\
+			'\nOriginal Width: ' + str(self.originaWidth) +\
+			'\nOriginal Height: ' + str(self.originaHeight) +\
+			'\nURL: ' + str(self.url) + '\n'
+
+
+class images:
+
+	def __init__(self, imagesDict):
+		self.thumbnails = []
+		self.posters = []
+		self.banners = []
+		self.backgrounds = []
+		sizes=['xlarge', 'large', 'medium', 'small']
+		for c in imagesDict['thumbnails']:
+			for j in sizes:
+				self.thumbnails.append(	image(
+										j,
+										c[j]['width'],
+										c[j]['height'],
+										c['original_width'],
+										c['original_height'],
+										c[j]['url'],
+										c['image_rating']
+										)	)
+		for c in imagesDict['posters']:
+			for j in sizes:
+				self.posters.append(	image(
+										j,
+										c[j]['width'],
+										c[j]['height'],
+										c['original_width'],
+										c['original_height'],
+										c[j]['url'],
+										c['image_rating']
+										)	)
+					
+		for c in imagesDict['banners']:
+			for j in sizes:
+				self.banners.append(	image(
+										j,
+										c[j]['width'],
+										c[j]['height'],
+										c['original_width'],
+										c['original_height'],
+										c[j]['url'],
+										c['image_rating']
+										)	)
+		for c in imagesDict['backgrounds']:
+			self.backgrounds.append(	image(
+									None,
+									c['original_width'],
+									c['original_height'],
+									c['original_width'],
+									c['original_height'],
+									c['original']['url'],
+									c['image_rating']
+									)	)
+					
+	def __str__(self):
+		text = 'Thumbnails: \n'
+		for i in self.thumbnails:
+			text += str(i)
+		text += '\nPosters: \n'
+		for i in self.posters:
+			text += str(i)
+		text += '\Banners: \n'
+		for i in self.banners:
+			text += str(i)
+		text += '\nBackgrounds: \n'
+		for i in self.backgrounds:
+			text += str(i)
+		return text + '\n'
+					
 
 
 class social:
@@ -125,20 +217,20 @@ class show():
 			'\nTVRage Link: ' + str(self.tvRageLink) + \
 			'\nArtwork: \n'
 		for a in self.artwork:
-			text += str(a)+'\n'
+			text += str(a) + '\n'
 		return text
 
 
 class showDetailed(show):
 
 	def __init__(self, gId, title, alternateTitles, containerShow, firstAired, imdbId, tvDb, theMovieDb, freebase,
-				 wikipediaId, tvRageId, tvRageLink, artwork, status, network, channels, runtime, characters,
-				 genres, tags, overview, airDay, airTime, rating, tvComId, metacritic, commonSenseMedia, socialNetworks, 
+				 wikipediaId, tvRageId, tvRageLink, artwork, status, theType, network, channels, runtime, characters,
+				 genres, tags, overview, airDay, airTime, rating, tvComId, metacritic, commonSenseMedia, socialNetworks,
 				 fanArt, poster, banner, url):
 		show.__init__(self,
 					  gId, title, alternateTitles, containerShow, firstAired, imdbId, tvDb, theMovieDb, freebase, wikipediaId, tvRageId, tvRageLink, artwork)
 		self.status = status
-		self.type = type
+		self.type = theType
 		self.network = network
 		self.channels = channels  # a list of channel objects
 		self.runtime = runtime
@@ -165,115 +257,121 @@ class showDetailed(show):
 			'\nNetwork: ' + str(self.network) + \
 			'\nChannels: \n'
 		for ch in self.channels:
-			text += str(ch)+'\n'
+			text += str(ch) + '\n'
 		text += '\nRuntime: ' + str(self.runtime) + \
-				'\nCast/Characters: \n'
+			'\nCast/Characters: \n'
 		for c in self.cast:
-			text += str(c)+'\n'
+			text += str(c) + '\n'
 		text += '\nGenres: \n'
 		for g in self.genres:
-			text += str(g)+'\n'
+			text += str(g) + '\n'
 		text += '\nTags: \n'
 		for tag in self.tags:
-			text += str(tag)+'\n'
+			text += str(tag) + '\n'
 		text += '\nOverview: ' + str(self.overview) + \
-				'\nAir Day: ' + str(self.airDay) + \
-				'\nAir Time: ' + str(self.airTime) + \
-				'\nRating: ' + str(self.rating) + \
-				'\nTV.com ID: ' + str(self.tvComId) + \
-				'\nMetacritic ID: ' + str(self.metacritic) + \
-				'\nCommon Sense Media ID: ' + str(self.commonSenseMedia) + \
-				'\nSocial Media Info: ' + str(self.social) + \
-				'\nFan Art URL: ' + str(self.fanArt) + \
-				'\nPoster URL: ' + str(self.poster) + \
-				'\nBanner URL: ' + str(self.banner) + \
-				'\nGuidebox URL:' + str(self.url) + '\n\n'
-				
+			'\nAir Day: ' + str(self.airDay) + \
+			'\nAir Time: ' + str(self.airTime) + \
+			'\nRating: ' + str(self.rating) + \
+			'\nTV.com ID: ' + str(self.tvComId) + \
+			'\nMetacritic ID: ' + str(self.metacritic) + \
+			'\nCommon Sense Media ID: ' + str(self.commonSenseMedia) + \
+			'\nSocial Media Info: ' + str(self.social) + \
+			'\nFan Art URL: ' + str(self.fanArt) + \
+			'\nPoster URL: ' + str(self.poster) + \
+			'\nBanner URL: ' + str(self.banner) + \
+			'\nGuidebox URL:' + str(self.url) + '\n\n'
+
 		return text
 
+
 class channel:
-	def __init__(self, cId, name, shortName, channelType, artworks, imdbId, wikipediaId, socialNetworks, liveStreams, 
-				primary):
+
+	def __init__(self, cId, name, shortName, channelType, artworks, imdbId, wikipediaId, socialNetworks, liveStreams,
+				 primary):
 		self.id = cId
-		self.name=name
-		self.shortName=shortName
-		self.channelType=channelType
-		self.artworks=artworks #list of artwork objects
-		self.imdbId=imdbId
-		self.wikipediaId=wikipediaId
-		self.socialNetworks=socialNetworks #a social object
-		self.liveStreams=liveStreams #streams object
+		self.name = name
+		self.shortName = shortName
+		self.channelType = channelType
+		self.artworks = artworks  # list of artwork objects
+		self.imdbId = imdbId
+		self.wikipediaId = wikipediaId
+		self.socialNetworks = socialNetworks  # a social object
+		self.liveStreams = liveStreams  # streams object
 		self.primary = primary
-		
+
 	def __str__(self, *args, **kwargs):
 		text = \
-			'Channel Name: '+str(self.name)+\
-			'\nID: '+str(self.id)+\
-			'\nShort Name: '+str(self.shortName)+\
-			'\nChannel Type: '+str(self.channelType)+\
+			'Channel Name: ' + str(self.name) +\
+			'\nID: ' + str(self.id) +\
+			'\nShort Name: ' + str(self.shortName) +\
+			'\nChannel Type: ' + str(self.channelType) +\
 			'\nArtworks: \n'
 		for a in self.artworks:
-			text += str(a)+'\n'
-		text += '\nIMDb ID: '+str(self.imdbId)+\
-				'\nWikipedia ID: '+str(self.wikipediaId)+\
-				'\nSocial: '+str(self.socialNetworks)+\
-				'\nLive Streaming Links: '+str(self.liveStreams)+\
-				'\nIs Primary: '+str(self.primary)+'\n'
+			text += str(a) + '\n'
+		text += '\nIMDb ID: ' + str(self.imdbId) +\
+			'\nWikipedia ID: ' + str(self.wikipediaId) +\
+			'\nSocial: ' + str(self.socialNetworks) +\
+			'\nLive Streaming Links: ' + str(self.liveStreams) +\
+			'\nIs Primary: ' + str(self.primary) + '\n'
 		return text
 
 
 class streamingSource:
-	
+
 	def __init__(self, streamDict):
-		self.source=streamDict['source']
-		self.name=streamDict['display_name']
-		self.channel=streamDict['tv_channel']
-		self.type=streamDict['type']
-		self.link=streamDict['link']
+		self.source = streamDict['source']
+		self.name = streamDict['display_name']
+		self.channel = streamDict['tv_channel']
+		self.type = streamDict['type']
+		self.link = streamDict['link']
 		self.isApp = 'app_name' in streamDict
-		
+
 		if self.isApp:
 			self.appName = streamDict['app_name']
 			self.appLink = streamDict['app_link']
-			self.appRequired = True if streamDict['app_required'] == 1 else False
+			self.appRequired = True if streamDict[
+				'app_required'] == 1 else False
 			self.appDownloadLink = streamDict['app_download_link']
+
 	def __str__(self, *args, **kwargs):
-		text = 'Source Name: '+str(self.source)+\
-			'\nDisplay Name: '+str(self.name)+\
-			'\nChannel: '+str(self.channel)+\
-			'\nType: '+str(self.type)+\
-			'\nLink: '+str(self.link)
+		text = 'Source Name: ' + str(self.source) +\
+			'\nDisplay Name: ' + str(self.name) +\
+			'\nChannel: ' + str(self.channel) +\
+			'\nType: ' + str(self.type) +\
+			'\nLink: ' + str(self.link)
 		if self.isApp:
-			text+= '\nApp Name: '+str(self.appName)+\
-				'\nApp Link: '+str(self.appLink)+\
-				'\nIs App Required for this Device? '+str(self.appRequired)+\
-				'\nApp Download Link: '+str(self.appDownloadLink)
+			text += '\nApp Name: ' + str(self.appName) +\
+					'\nApp Link: ' + str(self.appLink) +\
+					'\nIs App Required for this Device? ' + str(self.appRequired) +\
+					'\nApp Download Link: ' + str(self.appDownloadLink)
 		return text + '\n'
 
 
 class streams:
-	
+
 	def __init__(self, streamsDict):
-		self.web = []#
-		self.ios = []#streamsDict['ios']
-		self.android = []#streamsDict['android']
+		self.web = []
+		self.ios = []  # streamsDict['ios']
+		self.android = []  # streamsDict['android']
 		for s in streamsDict['web']:
 			self.web.append(streamingSource(s))
 		for s in streamsDict['ios']:
 			self.ios.append(streamingSource(s))
 		for s in streamsDict['android']:
 			self.android.append(streamingSource(s))
+
 	def __str__(self, *args, **kwargs):
 		text = 'Web: \n'
 		for s in self.web:
-			text+=str(s)+'\n'
+			text += str(s) + '\n'
 		text += 'iOS: \n'
 		for s in self.ios:
-			text+=str(s)+'\n'
+			text += str(s) + '\n'
 		text += 'Android: \n'
 		for s in self.android:
-			text+=str(s)+'\n'
+			text += str(s) + '\n'
 		return text
+
 
 class lookupShows():
 
@@ -293,7 +391,7 @@ class lookupShows():
 		self.results = []
 		self.firstLookup = True
 
-	def lookup(self):
+	def lookup(self, relatedId=None):
 		'''
 		Searches Guidebox for the criteria entered in the constructor
 		'''
@@ -309,6 +407,10 @@ class lookupShows():
 				url += 'search/title/' + \
 					tripleUrlEncode(self.title) + '/' + \
 					self.matchType
+			elif relatedId != None:
+				url += 'show/' + \
+						str(relatedId) +\
+						'/related'
 			else:
 				url += 'shows/' + \
 					self.channel + '/' + \
@@ -398,57 +500,57 @@ class lookupShows():
 		channels = resultDict['channels']
 		channelsList = []
 		characters = resultDict['cast']
-		charactersList=[]
+		charactersList = []
 		genres = resultDict['genres']
-		genresList=[]
+		genresList = []
 		tags = resultDict['tags']
-		tagsList=[]
-		
-		#channels
+		tagsList = []
+
+		# channels
 		for ch in channels:
 			channelsList.append(
-							channel(
-								ch['id'],
-								ch['name'],
-								ch['short_name'],
-								ch['channel_type'],
-								parseArtworks(ch),
-								ch['external_ids']['imdb'],
-								ch['external_ids']['wikipedia_id'],
-								social(
-									ch['social']['facebook']['facebook_id'],
-									ch['social']['facebook']['link'],
-									ch['social']['twitter']['twitter_id'],
-									ch['social']['twitter']['link'],
-									),
-								streams(ch['live_stream']),
-								ch['is_primary']
-								)
-							)
+				channel(
+					ch['id'],
+					ch['name'],
+					ch['short_name'],
+					ch['channel_type'],
+					parseArtworks(ch),
+					ch['external_ids']['imdb'],
+					ch['external_ids']['wikipedia_id'],
+					social(
+						ch['social']['facebook']['facebook_id'],
+						ch['social']['facebook']['link'],
+						ch['social']['twitter']['twitter_id'],
+						ch['social']['twitter']['link'],
+					),
+					streams(ch['live_stream']),
+					ch['is_primary']
+				)
+			)
 		for ch in characters:
 			charactersList.append(
-								character(
-										ch['name'],
-										ch['id'],
-										ch['character_name']
-										)
-								)
-			
+				character(
+					ch['name'],
+					ch['id'],
+					ch['character_name']
+				)
+			)
+
 		for g in genres:
 			genresList.append(
-								idTitle(
-										g['id'],
-										g['title']
-										)
-								)
-			
+				idTitle(
+					g['id'],
+					g['title']
+				)
+			)
+
 		for t in tags:
 			tagsList.append(
-								idTitle(
-										t['id'],
-										t['tag']
-										)
-								)
+				idTitle(
+					t['id'],
+					t['tag']
+				)
+			)
 
 		return showDetailed(
 			resultDict['id'],
@@ -465,6 +567,7 @@ class lookupShows():
 			resultDict['tvrage']['link'],
 			parseArtworks(resultDict),
 			resultDict['status'],
+			resultDict['type'],
 			resultDict['network'],
 			channelsList,
 			resultDict['runtime'],
@@ -479,16 +582,80 @@ class lookupShows():
 			resultDict['metacritic'],
 			resultDict['common_sense_media'],
 			social(
-					resultDict['social']['facebook']['facebook_id'],
-					resultDict['social']['facebook']['link'],
-					resultDict['social']['twitter']['twitter_id'],
-					resultDict['social']['twitter']['link']
-				),
+				resultDict['social']['facebook']['facebook_id'],
+				resultDict['social']['facebook']['link'],
+				resultDict['social']['twitter']['twitter_id'],
+				resultDict['social']['twitter']['link']
+			),
 			resultDict['fanart'],
 			resultDict['poster'],
 			resultDict['banner'],
 			resultDict['url']
 		)
+
+	def getSeasons(self, index=None, gId=None):
+
+		gIdNum = None
+		if gId == None and index != None:
+			if self.firstLookup:
+				raise Exception('You have to do a lookup() first.')
+				return False
+			if index > len(self.results):
+				raise IndexError('Result index out of range')
+				return False
+			gIdNum = self.results[index].id
+		elif gId != None:
+			gIdNum = gId
+
+		url = BASE_URL + '/show/' + str(gIdNum) + '/seasons'
+
+		try:
+			results = urllib2.urlopen(url).read()
+		except urllib2.HTTPError as e:
+			print('Error opening URL "' + url + ': ' + str(e))
+			return False
+
+		resultDict = json.loads(results)
+		seasonsDict = resultDict['results']
+		self.seasons = {}
+		for s in seasonsDict:
+			self.seasons[int(s['season_number'])] = datetime.strptime(
+				s['first_airdate'], '%Y-%m-%d')
+
+		return True
+
+	def getImages(self, index=None, gId=None, imgType='all'):
+
+		gIdNum = None
+		if gId == None and index != None:
+			if self.firstLookup:
+				raise Exception('You have to do a lookup() first.')
+				return False
+			if index > len(self.results):
+				raise IndexError('Result index out of range')
+				return False
+			gIdNum = self.results[index].id
+		elif gId != None:
+			gIdNum = gId
+
+		if not imgType in ["all", "thumbnails", "posters", "banners", "backgrounds"]:
+			raise ValueError(
+				'Invalid imgType - imgType must be one of: ["all","thumbnails","posters","banners","backgrounds"]')
+
+		url = BASE_URL + '/show/' + str(gIdNum) + '/images/' + imgType
+
+		try:
+			results = urllib2.urlopen(url).read()
+		except urllib2.HTTPError as e:
+			print('Error opening URL "' + url + ': ' + str(e))
+			return False
+
+		resultDict = json.loads(results)
+		imagesDict = resultDict['results']
+
+		self.images = images(imagesDict)
+
+		return True
 
 	def __str__(self, *args, **kwargs):
 		text = ''
@@ -506,8 +673,15 @@ class lookupShows():
 
 		return text
 
-r = lookupShows(title='the office')
-r.lookup()
-print(r.lookupDetailed(index=0))
+# r = lookupShows(title='the office')
+# r.lookup()
+# print(r.lookupDetailed(index=0))
+# r.getSeasons(index=0)
+# print(r.seasons)
+# r.getImages(gId=2098)
+# print(r.images)
+r=lookupShows()
+r.lookup(2098)
+print(r)
 
-#print(r)
+# print(r)
