@@ -434,10 +434,8 @@ class lookupShows():
 
 			resultsDict = json.loads(results)
 
-			self.totalResults = resultsDict[
-				'total_results'] if 'totalResults' in resultsDict else None
-			self.totalReturned = resultsDict[
-				'total_returned'] if 'totalReturned' in resultsDict else None
+			self.totalResults = resultsDict['total_results'] if 'total_results' in resultsDict else None
+			self.totalReturned = resultsDict['total_returned'] if 'total_returned' in resultsDict else None
 
 			resultsListDict = dict()
 			if 'results' in resultsDict:
@@ -682,6 +680,6 @@ class lookupShows():
 # print(r.images)
 r=lookupShows()
 r.lookup(2098)
-print(r)
 
-# print(r)
+
+print(r)
